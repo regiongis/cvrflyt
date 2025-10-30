@@ -205,6 +205,8 @@ TabContainer.propTypes = {
 class App extends Component {
   constructor(props) {
     super(props);
+    console.log('BAFFIOSO WAS HERE');
+
     this.state = {
       value: 0,
       startDate: moment()
