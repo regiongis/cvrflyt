@@ -27,6 +27,11 @@ import { DatePicker } from "@material-ui/pickers";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import Menu from "@material-ui/core/Menu";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import InfoIcon from "@material-ui/icons/Info";
 import MapData from "./Map.js";
 import GridData from "./Grid.js";
@@ -205,7 +210,6 @@ TabContainer.propTypes = {
 class App extends Component {
   constructor(props) {
     super(props);
-    console.log('BAFFIOSO WAS HERE');
 
     this.state = {
       value: 0,
@@ -240,6 +244,7 @@ class App extends Component {
       },
       registrationErrorMessage: "",
       loginErrorMessage: false,
+      branchCodeDialogOpen: true,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -261,6 +266,7 @@ class App extends Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
     this.handleLoginDatachange = this.handleLoginDatachange.bind(this);
+    this.handleBranchCodeDialogClose = this.handleBranchCodeDialogClose.bind(this);
     this.db = "erhvervsinfo";
   }
 
@@ -621,6 +627,12 @@ class App extends Component {
     });
   }
 
+  handleBranchCodeDialogClose() {
+    this.setState({
+      branchCodeDialogOpen: false,
+    });
+  }
+
   render() {
     const { value, startDate, endDate, kommuner, komkode } = this.state;
     const locale = "da";
@@ -646,6 +658,38 @@ class App extends Component {
             handleCreateDialogOpen={this.handleCreateDialogOpen}
             errorMessage={this.state.registrationErrorMessage}
           />
+
+          <Dialog
+            open={this.state.branchCodeDialogOpen}
+            onClose={this.handleBranchCodeDialogClose}
+            aria-labelledby="branch-code-dialog-title"
+            maxWidth="sm"
+            fullWidth
+          >
+            <DialogTitle id="branch-code-dialog-title">
+              Vigtig information om branchekoder
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Vær opmærksom på, at CVR-flyt stadig benytter den gamle branchekode DB07, selv om der pr. 1. januar 2025 er kommet en ny DB25.
+                <br /><br />
+                Det forventes at få opdateret branchekoden i CVR-flyt i 2026. Du kan læse mere om DB25 hos Danmarks Statistik på dette{" "}
+                <Link 
+                  href="https://www.dst.dk/da/Statistik/dokumentation/dansk-branchekode-opdateres" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  link
+                </Link>.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleBranchCodeDialogClose} color="primary" variant="contained">
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
+
           <div className=''>
             <AppBar position='static' color='default'>
               <Toolbar>
